@@ -9,7 +9,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
+        background: "#EDEDED",
+        lightGreen: "#A4FED3",
+        darkGreen: "#3EEE9A",
+        red: "#FEA4A4",
+        blueButton: "#00ABED",
+        black: "#000000",
+        white: "#FFFFFF",
+        darkBlue: "#222E50",
         foreground: "var(--foreground)",
       },
     },
