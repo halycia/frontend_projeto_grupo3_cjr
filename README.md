@@ -1,50 +1,36 @@
-<div align="center">
-    
-  # Projeto do Grupo 3 do Processo Treinee da CJR
-  
-  [Overview](#overview) •
-  [Getting Started](#getting-started) •
-  [Prerequisites](#prerequisites) •
-  
-  </div>
-  
-  ---
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
- <h2 id="overview">🎯 Overview</h2>
+## Getting Started
 
- **Repositório do front-end**
+First, run the development server:
 
-  O projeto é um ambiente online onde os usuários podem compartilhar avaliações sobre professores e suas disciplinas. Além disso, os usuários podem comentar e interagir nas avaliações de outros, enriquecendo ainda mais o conteúdo.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-  O principal objetivo é fornecer uma comunidade online onde estudantes possam compartilhar experiências e avaliações sobre professores, facilitando a tomada de decisões informadas em relação à escolha de disciplinas durante o período de matrícula.
-  
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-  <h2 id="getting-started">🚀 Getting Started</h2>
-  
-  Para fazer uma cópia local ligada ao repositório remoto, siga as instruções:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-  *Copie o repositório no seu computador:
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-  git clone https://github.com/halycia/projeto_grupo3_cjr.git
-  
-  *Crie uma nova branch para trabalhar, onde minha-feature é o nome da branch (você pode escolher qualquer nome, desde que seja uma breve descrição da feature que você vai desenvolver. A fim de padronizar, o nome deve ser todo minúsculo e coloque - como espaço, se precisar):
-  
-  git checkout -b minha-feature
+## Learn More
 
-  Pronto! Você já está pronto(a) para desenvolver.
+To learn more about Next.js, take a look at the following resources:
 
-  
-  <h2 id="prerequisites">🚀 Prerequisites</h2>
-  
-  Você deve ter instalado em seu computador:
-  
-  - Node.js
-  - npm (Node Package Manager)
-  - Git
-  - NestJS
-  - Prisma
-  - React.js
-  - Next.js
-  - TailwindCSS
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-  Observação: Ao instalar o Node.js, o npm (Node Package Manager) já vem automaticamente incluído.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
