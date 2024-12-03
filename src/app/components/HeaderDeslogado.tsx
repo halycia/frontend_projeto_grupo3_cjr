@@ -4,7 +4,7 @@ import login from "../../../public/imagens/login.png";
 import { Button } from "@headlessui/react";
 export default function HeaderDeslogado() {
   return (
-    <nav className="h-[99px] w-screen absolute inset-y-0 left-0 bg-lightGreen flex justify-between items-center">
+    <nav className="h-[99px] w-screen relative inset-y-0 left-0 bg-lightGreen flex justify-between items-center">
       <div className=" w-[120px] ml-10 flex justify-center items-center">
         <Image src={unbPic} alt="unb" width={92} height={46} />
       </div>
