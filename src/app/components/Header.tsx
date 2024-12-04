@@ -6,7 +6,7 @@ import { BellAlertIcon } from "@heroicons/react/24/outline";
 import { Button } from "@headlessui/react";
 export default function Header() {
   return (
-    <nav className="h-[99px] w-screen absolute inset-y-0 left-0 bg-lightGreen flex justify-between items-center">
+    <nav className="h-[99px] w-screen fixed inset-y-0 left-0 bg-lightGreen flex justify-between items-center mb-[99px]">
       <div className=" w-[120px] ml-10 flex justify-center items-center">
         <Image src={unbPic} alt="unb" width={92} height={46} />
       </div>
