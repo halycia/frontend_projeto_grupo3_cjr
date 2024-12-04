@@ -1,6 +1,18 @@
-import { Building, Mail } from "lucide-react";
+import {
+  Building,
+  FilePenLine,
+  Mail,
+  MessageCircle,
+  Trash2,
+} from "lucide-react";
 import Header from "../components/Header";
-import { inter400, inter700 } from "../fonts/fonts";
+import {
+  inter400,
+  inter500,
+  inter700,
+  inter800,
+  inter900,
+} from "../fonts/fonts";
 import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
@@ -9,7 +21,7 @@ export default function PerfilLogadoPage() {
   return (
     <div className="bg-background flex flex-col justify-center items-center h-screen w-screen relative">
       <Header />
-      <div className="bg-white mt-[99px] flex flex-col shadow-md shadow-gray-500 items-center h-full w-[646px]">
+      <div className="bg-white mt-[120px] flex flex-col shadow-md shadow-gray-500 items-center h-full w-[646px]">
         <div className="h-[346px] w-full">
           <div className="h-[151px] bg-darkGreen shadow shadow-gray-500 flex relative">
             <Image
@@ -52,7 +64,53 @@ export default function PerfilLogadoPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white w-full h-full"></div>
+        <div className="bg-white w-full h-full flex flex-col p-2">
+          <div className={`text-black ${inter800.className}`}>Publicações</div>
+          <div className="bg-darkGreen w-[630px] h-[182px] rounded-3xl p-4 gap-2">
+            <div className="w-[520] flex flex-col">
+              <div className="flex items-center gap-4">
+                <div className="w-[48px] h-[48px]">
+                  <Image
+                    src={fotoPerfil}
+                    alt="foto-perfil"
+                    className="rounded-full"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <p className={`${inter900.className} text-black text-sm`}>
+                    Morty Gamer
+                  </p>
+                  <p className={`${inter400.className} text-lightGray text-sm`}>
+                    · 17/04/2024, às 21:42 · João Frango · Surf
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-center items-center w-[520px] h-[74px] text-ellipsis ml-16">
+                <p
+                  className={`${inter500.className} text-darkBlue text-sm text-justify`}
+                >
+                  Contrary to popular belief, Lorem Ipsum is not simply random
+                  text. It has roots in a piece of classical Latin literature
+                  from 45 BC, making it over 2000 years old. Richard McClintock,
+                  a Latin professor at Hampden-Sydney College in Virginia,
+                  looked up one of the more obscure Latin
+                </p>
+              </div>
+              <div className="flex w-[520px] h-fit ml-16 justify-between mt-2">
+                <div className="flex items-center gap-2">
+                  <MessageCircle size={20} />
+                  <p className={`${inter500.className} text-darkBlue text-sm`}>
+                    2 comentários
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FilePenLine size={20} />
+                  <Trash2 size={20} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

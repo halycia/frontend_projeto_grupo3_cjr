@@ -18,6 +18,7 @@ export default {
         white: "#FFFFFF",
         darkBlue: "#222E50",
         foreground: "var(--foreground)",
+        lightGray: "#71767B",
       },
     },
   },
