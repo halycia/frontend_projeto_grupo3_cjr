@@ -1,11 +1,4 @@
-import {
-  Building,
-  Dot,
-  FilePenLine,
-  Mail,
-  MessageCircle,
-  Trash2,
-} from "lucide-react";
+import { Building, CircleArrowLeft, Dot, Mail } from "lucide-react";
 import Header from "../components/Header";
 import {
   inter400,
@@ -19,7 +12,6 @@ import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
 import Publicacao from "../components/Publicacao";
-import HeaderDeslogado from "../components/HeaderDeslogado";
 export default function PerfilLogadoPage() {
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
