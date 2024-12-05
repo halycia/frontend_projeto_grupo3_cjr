@@ -4,6 +4,7 @@ import Image from "next/image";
 import Lupa from "../../../public/imagens/lupa.svg";
 import Ordenar from "../../../public/imagens/ordenar.svg";
 import Rick from "../../../public/imagens/rick.svg";
+import Publicacao from "../../../public/imagens/publicacaonova.svg";
 
 import { Button } from "@headlessui/react";
 
@@ -48,15 +49,24 @@ const perfilDeslogado = () => {
                 Todos Professores
             </h1>
 
-            <div className="w-[200px] h-[70px] flex items-center justify-center mr-[200px]">
+    
+            <div className="w-[450px] h-[70px] flex items-center justify-center mr-[200px] gap-x-[50px]">
                 <Button>
                     <Image
-                        src={Ordenar}
-                        alt="botão-de-login"
+                        src={Publicacao}
+                        alt="botão-de-nova-publicação"
                         className="w-full object-cover "
                     />
                 </Button>
-            </div>
+                <Button>
+                    <Image
+                        src={Ordenar}
+                        alt="botão-de-ordenar"
+                        className="w-full object-cover "
+                    />
+                </Button>
+            </div>  
+           
         </div>
 
         <div className="flex items-center justify-center w-full p-4 rounded-lg bg-white">

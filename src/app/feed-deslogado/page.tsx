@@ -52,7 +52,7 @@ const perfilDeslogado = () => {
                 <Button>
                     <Image
                         src={Ordenar}
-                        alt="botão-de-login"
+                        alt="botão-de-ordenar"
                         className="w-full object-cover "
                     />
                 </Button>

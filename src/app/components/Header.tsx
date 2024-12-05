@@ -4,7 +4,6 @@ import perfilFoto from "../../../public/imagens/perfil.png";
 import sairImagem from "../../../public/imagens/sair.png";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import { Button } from "@headlessui/react";
-import { CircleArrowLeft } from "lucide-react";
 export default function Header() {
   return (
     <nav className="h-[99px] w-screen relative inset-y-0 left-0 bg-lightGreen flex justify-between items-center mb-[40px] z-40 shadow shadow-gray-500 ">
