@@ -10,9 +10,6 @@ export default function Header() {
     <nav className="h-[99px] w-screen relative inset-y-0 left-0 bg-lightGreen flex justify-between items-center mb-[40px] z-40 shadow shadow-gray-500 ">
       <div className=" w-[150px] ml-10 flex justify-center items-center gap-4">
         <Image src={unbPic} alt="unb" width={92} height={46} />
-        <Button className="focus:outline-none rounded-full data-[hover]:bg-emerald-300 data-[open]:bg-teal-600 data-[open]: outline-1">
-          <CircleArrowLeft size={50} />
-        </Button>
       </div>
       <div className="w-[280px] h-[90px] flex justify-around items-center">
         <Button className="inline-flex items-center gap-2 rounded-full  py-1.5 px-3 text-sm/6 font-semibold  focus:outline-none  data-[hover]:bg-emerald-300 data-[open]:bg-teal-600 data-[open]: outline-1">
