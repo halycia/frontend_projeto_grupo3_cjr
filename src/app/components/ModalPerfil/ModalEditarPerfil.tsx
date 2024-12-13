@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, Button } from '@headlessui/react';
 import Image from "next/image";
 
-import { inter400 } from "../fonts/fonts";
+import { inter400 } from "../../fonts/fonts";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 
 interface ModalEditarPerfilProps {

@@ -14,7 +14,7 @@ import {
 import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
-import ModalEditarPerfil from "../components/ModalEditarPerfil";
+import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
 import Link from "next/link";
 import { CircleArrowLeft } from "lucide-react";
 
