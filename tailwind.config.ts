@@ -13,6 +13,7 @@ export default {
         lightGreen: "#A4FED3",
         darkGreen: "#3EEE9A",
         red: "#FEA4A4",
+        darkRed: "#FF0000",
         blueButton: "#00ABED",
         black: "#000000",
         white: "#FFFFFF",
