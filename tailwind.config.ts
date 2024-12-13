@@ -12,6 +12,8 @@ export default {
         background: "#EDEDED",
         lightGreen: "#A4FED3",
         darkGreen: "#3EEE9A",
+        middleGreen: "#449e48",
+        darkestGreen: "#15803d",
         red: "#FEA4A4",
         darkRed: "#FF0000",
         blueButton: "#00ABED",
