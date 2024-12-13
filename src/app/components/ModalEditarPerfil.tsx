@@ -54,6 +54,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
     }, [usuarioId]);
 
     const validarSenhaAtual = () => {
+        if (!usuario) return;
         if (senhaAtual !== usuario?.senha) {
             setErroSenhaAtual('A senha atual está incorreta');
         } else {
@@ -69,15 +70,62 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        validarSenhaAtual();
-        validarNovaSenha();
-
-        if (!erroSenhaAtual && !erroNovaSenha) {
-            // Submeter os dados aqui
-            console.log('Senha válida. Enviando dados...');
+    
+        let erroAtual = '';
+        let erroNova = '';
+    
+        if (!usuario) {
+            console.log('Erro: Usuário não carregado.');
+            return;
+        }
+    
+        if (senhaAtual !== usuario.senha) {
+            erroAtual = 'A senha atual está incorreta';
+        }
+    
+        if (novaSenha && novaSenha !== confirmarNovaSenha) {
+            erroNova = 'As senhas não coincidem';
+        }
+    
+        if (erroAtual || erroNova) {
+            setErroSenhaAtual(erroAtual);
+            setErroNovaSenha(erroNova);
+            console.log('Senha inválida. Requisição recusada.');
+            return;
+        }
+    
+        const form = e.currentTarget as HTMLFormElement;
+        const nome = (form.elements.namedItem('nome') as HTMLInputElement)?.value;
+        const curso = (form.elements.namedItem('curso') as HTMLInputElement)?.value;
+        const departamento = (form.elements.namedItem('departamento') as HTMLInputElement)?.value;
+    
+        const updatedUser = {
+            ...usuario,
+            nome,
+            curso,
+            departamento,
+            senha: novaSenha || usuario.senha,
+        };
+    
+        try {
+            const response = await fetch(`http://localhost:3000/user/${usuarioId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedUser),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Erro ao salvar alterações');
+            }
+    
+            console.log('Dados salvos com sucesso');
+            onClose();
+        } catch (error) {
+            console.error('Erro ao salvar dados', error);
         }
     };
 
@@ -109,6 +157,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
                         <div className="mt-4">
                             <input
                                 type="text"
+                                name="nome"
                                 placeholder="Nome"
                                 defaultValue={usuario.nome}
                                 className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
@@ -117,6 +166,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
                         <div className="mt-4">
                             <input
                                 type="email"
+                                name="email"
                                 placeholder="Email"
                                 defaultValue={usuario.email}
                                 className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
@@ -126,6 +176,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
                         <div className="mt-4">
                             <input
                                 type="text"
+                                name="curso"
                                 placeholder="Curso"
                                 defaultValue={usuario.curso}
                                 className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
@@ -134,6 +185,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
                         <div className="mt-4">
                             <input
                                 type="text"
+                                name="departamento"
                                 placeholder="Departamento"
                                 defaultValue={usuario.departamento}
                                 className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
