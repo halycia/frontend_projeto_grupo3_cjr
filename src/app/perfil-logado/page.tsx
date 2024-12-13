@@ -15,6 +15,8 @@ import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
 import ModalEditarPerfil from "../components/ModalEditarPerfil";
+import Link from "next/link";
+import { CircleArrowLeft } from "lucide-react";
 
 
 export default function PerfilLogadoPage() {
@@ -26,6 +28,13 @@ export default function PerfilLogadoPage() {
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
       <Header />
+      <div className="flex items-center w-full h-[30px]">
+        <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
+          <Link href={"feed-logado"}>
+            <CircleArrowLeft size={50} />
+          </Link>
+        </Button>
+      </div>
       <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-full w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
         <div className="h-auto w-full">
           <div className="h-[151px] bg-darkGreen shadow shadow-gray-500 flex relative">
