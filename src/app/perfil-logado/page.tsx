@@ -1,18 +1,28 @@
-import { Building, CircleArrowLeft, Dot, Mail } from "lucide-react";
+"use client"
+
+import { Building, Dot, Mail } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from "@headlessui/react";
+import Image from "next/image";
+
 import Header from "../components/Header";
 import {
   inter400,
-  inter500,
   inter700,
   inter800,
-  inter900,
 } from "../fonts/fonts";
 import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
-import Image from "next/image";
-import { Button } from "@headlessui/react";
 import Publicacao from "../components/Publicacao";
+import ModalEditarPerfil from "../components/ModalEditarPerfil";
+
+
 export default function PerfilLogadoPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
       <Header />
@@ -29,12 +39,18 @@ export default function PerfilLogadoPage() {
             className={`bg-white h-auto border-solid border-b-2 w-full flex flex-col justify-around ${inter700.className}`}
           >
             <div className="flex flex-col items-end mr-4 gap-1 mt-4">
-              <Button
-                className={`bg-lightGreen rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9
+              <div>
+                <Button
+                  className={`bg-lightGreen rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9
                  border-darkBlue hover:shadow-inner hover:shadow-green-400`}
-              >
-                Editar Perfil
-              </Button>
+                  onClick={openModal}
+                >
+                  Editar Perfil
+                </Button>
+                {isModalOpen && (
+                  <ModalEditarPerfil isOpen={isModalOpen} onClose={closeModal} />
+                )}
+              </div>
               <Button
                 className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
