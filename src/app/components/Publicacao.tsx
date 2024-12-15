@@ -2,7 +2,11 @@ import { FilePenLine, Trash2, MessageCircle } from "lucide-react";
 import { inter500, inter900, inter400 } from "../fonts/fonts";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
+import { useState } from "react";
+import Comentarios from "./Comentarios";
 export default function Publicacao() {
+  const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
+
   return (
     <div className="bg-darkGreen w-full h-auto max-w-screen-sm rounded-3xl p-4 gap-2 overflow-y-auto">
       <div className="w-full flex flex-col">
@@ -35,7 +39,10 @@ export default function Publicacao() {
           </p>
         </div>
         <div className="flex w-[520px] h-fit ml-16 justify-between mt-2">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2"
+            onClick={() => setComentariosVisiveis(!comentariosVisiveis)}
+          >
             <MessageCircle size={20} />
             <p className={`${inter500.className} text-darkBlue text-sm`}>
               2 comentários
@@ -46,6 +53,12 @@ export default function Publicacao() {
             <Trash2 size={20} />
           </div>
         </div>
+
+        {comentariosVisiveis && (
+          <div className="mt-4 flex flex-col w-full gap-2">
+            <Comentarios />
+          </div>
+        )}
       </div>
     </div>
   );
