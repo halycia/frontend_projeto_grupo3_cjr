@@ -4,7 +4,27 @@ import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
 import { useState } from "react";
 import Comentarios from "./Comentarios";
-export default function Publicacao() {
+import dayjs from "dayjs";
+dayjs.locale("pt-br");
+
+interface PublicacaoProps {
+  id: number;
+  conteudo: string;
+  createdAt: string;
+  disciplinaId: number;
+  professorId: number;
+  updatedAt: string;
+  usuarioId: number;
+}
+
+export default function Publicacao({
+  conteudo,
+  createdAt,
+  professorId,
+  usuarioId,
+  disciplinaId,
+  id,
+}: PublicacaoProps) {
   const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
 
   return (
@@ -23,24 +43,21 @@ export default function Publicacao() {
               Morty Gamer
             </p>
             <p className={`${inter400.className} text-lightGray text-sm`}>
-              · 17/04/2024, às 21:42 · João Frango · Surf
+              · {dayjs(createdAt).format("DD/MM/YY, HH:mm")} · {professorId} ·
+              {disciplinaId}
             </p>
           </div>
         </div>
-        <div className="flex justify-center items-center w-auto h-auto text-ellipsis ml-16">
+        <div className="flex  items-center w-auto h-auto text-ellipsis ml-16">
           <p
             className={`${inter500.className} text-darkBlue text-sm text-justify`}
           >
-            Contrary to popular belief, Lorem Ipsum is not simply random text.
-            It has roots in a piece of classical Latin literature from 45 BC,
-            making it over 2000 years old. Richard McClintock, a Latin professor
-            at Hampden-Sydney College in Virginia, looked up one of the more
-            obscure Latin
+            {conteudo}
           </p>
         </div>
         <div className="flex w-[520px] h-fit ml-16 justify-between mt-2">
           <div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 hover:cursor-pointer"
             onClick={() => setComentariosVisiveis(!comentariosVisiveis)}
           >
             <MessageCircle size={20} />

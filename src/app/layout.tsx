@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { inter400 } from "./fonts/fonts";
+import { AuthProvider } from "./context/authContext";
+import { ProfessorProvider } from "./context/professorContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +20,9 @@ export default function RootLayout({
       <body
         className={`${inter400.className} ${inter400.className} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <ProfessorProvider>{children}</ProfessorProvider>
+        </AuthProvider>
       </body>
     </html>
   );
