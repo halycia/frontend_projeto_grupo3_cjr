@@ -7,11 +7,10 @@ import Ordenar from "../../../public/imagens/ordenar.svg";
 import Rick from "../../../public/imagens/rick.svg";
 
 import { Button } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import api from "@/utils/api";
 
 const perfilDeslogado = () => {
-  const [professores, setProfessores] = useState([]);
   useEffect(() => {
     fetchProfessores();
   }, []);
@@ -20,7 +19,6 @@ const perfilDeslogado = () => {
     try {
       const professores = await api.get("/professores");
       console.log(professores.data);
-      setProfessores(professores.data);
     } catch (err) {
       console.log(err);
     }

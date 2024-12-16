@@ -2,30 +2,54 @@ import { FilePenLine, Trash2, MessageCircle } from "lucide-react";
 import { inter500, inter900, inter400 } from "../fonts/fonts";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Comentarios from "./Comentarios";
 import dayjs from "dayjs";
+import api from "@/utils/api";
+import axios from "axios";
 dayjs.locale("pt-br");
 
 interface PublicacaoProps {
   id: number;
   conteudo: string;
   createdAt: string;
-  disciplinaId: number;
-  professorId: number;
+  disciplina: string;
+  professor: string;
   updatedAt: string;
   usuarioId: number;
+  usuario: string;
 }
 
 export default function Publicacao({
   conteudo,
   createdAt,
-  professorId,
+  professor,
   usuarioId,
-  disciplinaId,
   id,
+  usuario,
+  disciplina,
 }: PublicacaoProps) {
   const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
+  const [comentarios, setComentarios] = useState<any[]>([]);
+  const [disable, setDisable] = useState(false);
+
+  useEffect(() => {
+    fetchComentarios();
+  }, []);
+
+  const fetchComentarios = async () => {
+    try {
+      const response = await api.get(`/avaliacoes/${id}`);
+      console.log(response.data);
+      setComentarios([...response.data.comentarios]);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        console.log(err.response.data.message);
+      } else {
+        console.log(err);
+      }
+    }
+  };
 
   return (
     <div className="bg-darkGreen w-full h-auto max-w-screen-sm rounded-3xl p-4 gap-2 overflow-y-auto">
@@ -40,11 +64,11 @@ export default function Publicacao({
           </div>
           <div className="flex items-center gap-2">
             <p className={`${inter900.className} text-black text-sm`}>
-              Morty Gamer
+              {usuario}
             </p>
             <p className={`${inter400.className} text-lightGray text-sm`}>
-              · {dayjs(createdAt).format("DD/MM/YY, HH:mm")} · {professorId} ·
-              {disciplinaId}
+              · {dayjs(createdAt).format("DD/MM/YY, HH:mm")} · {professor} ·
+              {disciplina}
             </p>
           </div>
         </div>
@@ -58,11 +82,14 @@ export default function Publicacao({
         <div className="flex w-[520px] h-fit ml-16 justify-between mt-2">
           <div
             className="flex items-center gap-2 hover:cursor-pointer"
-            onClick={() => setComentariosVisiveis(!comentariosVisiveis)}
+            onClick={() => {
+              if (comentarios.length > 0)
+                setComentariosVisiveis(!comentariosVisiveis);
+            }}
           >
             <MessageCircle size={20} />
             <p className={`${inter500.className} text-darkBlue text-sm`}>
-              2 comentários
+              {comentarios.length} comentários
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -73,7 +100,22 @@ export default function Publicacao({
 
         {comentariosVisiveis && (
           <div className="mt-4 flex flex-col w-full gap-2">
-            <Comentarios />
+            {comentarios.length > 0 ? (
+              comentarios.map((comentario) => (
+                <Comentarios
+                  key={comentario.id}
+                  id={comentario.id}
+                  conteudo={comentario.conteudo}
+                  createdAt={comentario.createdAt}
+                  usuarioId={comentario.usuarioId}
+                  avaliacaoId={comentario.publicacaoId}
+                />
+              ))
+            ) : (
+              <p className={`${inter500.className} text-darkBlue text-sm`}>
+                Nenhum comentário
+              </p>
+            )}
           </div>
         )}
       </div>

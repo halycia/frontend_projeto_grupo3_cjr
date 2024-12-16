@@ -1,7 +1,26 @@
 import { inter500, inter400, inter900 } from "../fonts/fonts";
 import Image from "next/image";
 import fotoPerfil from "../../../public/imagens/perfil.png";
-export default function Comentarios() {
+import dayjs from "dayjs";
+
+interface ComentariosProps {
+  conteudo: string;
+
+  createdAt: string;
+
+  usuarioId: number;
+
+  avaliacaoId: number;
+  id: number;
+}
+
+export default function Comentarios({
+  conteudo,
+  createdAt,
+  id,
+  usuarioId,
+  avaliacaoId,
+}: ComentariosProps) {
   return (
     <div className="bg-white flex justify-center flex-col w-full rounded-full p-1">
       <div className="flex items-center gap-2 ml-4">
@@ -13,13 +32,13 @@ export default function Comentarios() {
             Morty Gamer
           </p>
           <p className={`${inter500.className} text-lightGray text-xs`}>
-            · 17/04/2024, às 21:42
+            · {dayjs(createdAt).format("DD/MM/YYYY")}
           </p>
         </div>
       </div>
       <div className=" flex items-center gap-2 ml-14 mb-4">
         <p className={`text-sm ${inter500.className} text-darkBlue  `}>
-          Não tenho culpa de nada!
+          {conteudo}
         </p>
       </div>
     </div>

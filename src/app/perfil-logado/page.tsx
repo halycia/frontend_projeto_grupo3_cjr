@@ -24,12 +24,16 @@ export default function PerfilLogadoPage() {
   const closeModal = () => setIsModalOpen(false);
   console.log(avaliacao);
   useEffect(() => {
-    const fetchComentarios = async () => {
+    fetchAvaliacoes();
+  }, []);
+  const fetchAvaliacoes = async () => {
+    try {
       const response = await api.get("/avaliacoes");
       setAvaliacao([...response.data]);
-    };
-    fetchComentarios();
-  }, []);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
@@ -103,10 +107,11 @@ export default function PerfilLogadoPage() {
               conteudo={avaliacao.conteudo}
               id={avaliacao.id}
               createdAt={avaliacao.createdAt}
-              disciplinaId={avaliacao.disciplinaId}
               usuarioId={avaliacao.usuarioId}
-              professorId={avaliacao.professorId}
+              professor={avaliacao.professor.nome}
               updatedAt={avaliacao.updatedAt}
+              disciplina={avaliacao.diciplina.nome}
+              usuario={avaliacao.usuario.nome}
             />
           ))}
           `
