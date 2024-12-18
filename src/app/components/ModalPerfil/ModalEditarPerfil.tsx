@@ -3,7 +3,7 @@ import { Dialog, Button } from '@headlessui/react';
 import Image from "next/image";
 
 import { inter400 } from "../../fonts/fonts";
-import fotoPerfil from "../../../public/imagens/perfil.png";
+import fotoPerfil from "../../../../public/imagens/perfil.png";
 
 interface ModalEditarPerfilProps {
     isOpen: boolean;
@@ -26,7 +26,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
     const [erroSenhaAtual, setErroSenhaAtual] = useState('');
     const [erroNovaSenha, setErroNovaSenha] = useState('');
 
-    const usuarioId = 3; // Supondo que o usuário esteja logado e seu id seja 1
+    const usuarioId = 3;
 
     useEffect(() => {
         const fetchUsuarioData = async () => {
@@ -41,7 +41,7 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({ isOpen, onClose }
                 const data = await response.json();
 
                 if (data) {
-                    setUsuario(data); // Define os dados recebidos no estado
+                    setUsuario(data);
                 } else {
                     throw new Error('Dados inválidos recebidos');
                 }

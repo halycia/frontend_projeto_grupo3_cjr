@@ -1,9 +1,10 @@
 "use client"
 
-import { Building, Dot, Mail } from "lucide-react";
+import { Building, Dot, Mail, CircleArrowLeft } from "lucide-react";
 import React, { useState } from 'react';
 import { Button } from "@headlessui/react";
 import Image from "next/image";
+import Link from "next/link";
 
 import Header from "../components/Header";
 import {
@@ -15,15 +16,20 @@ import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
 import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
-import Link from "next/link";
-import { CircleArrowLeft } from "lucide-react";
+import ModalComentario from "../components/ModalComentario/ModalComentario";
+import ModalAvaliacao from "../components/ModalAvaliacao/ModalAvaliacao";
+import ModalEditarAvaliacao from "../components/ModalAvaliacao/ModalEditarAvaliacao";
 
 
 export default function PerfilLogadoPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalComentarioOpen, setIsModalComentarioOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openModalComentario = () => setIsModalComentarioOpen(true);
+  const closeModalComentario = () => setIsModalComentarioOpen(false);
 
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
@@ -63,9 +69,13 @@ export default function PerfilLogadoPage() {
               <Button
                 className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
+                 onClick={openModalComentario}
               >
                 Excluir Perfil
               </Button>
+              {isModalComentarioOpen && (
+                  <ModalAvaliacao isOpen={isModalComentarioOpen} onClose={closeModalComentario} />
+                )}
             </div>
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">

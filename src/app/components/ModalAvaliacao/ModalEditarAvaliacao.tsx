@@ -180,7 +180,7 @@ const ModalEditarAvaliacao: React.FC<ModalEditarAvaliacaoProps> = ({ isOpen, onC
                         <div className="mb-4">
                             <Textarea
                                 name="avaliacao"
-                                className="w-full min-h-[20rem] px-3 py-2 border rounded-[20px] bg-lightGreen focus:outline-none focus:ring-2 focus:ring-darkestGreen focus:border-transparent leading-tight resize-none overflow-y-auto"
+                                className="w-full min-h-[20rem] px-3 py-5 border rounded-[20px] bg-lightGreen focus:outline-none focus:ring-2 focus:ring-darkestGreen focus:border-transparent leading-tight resize-none overflow-y-auto"
                                 placeholder="Digite sua avaliação aqui"
                                 value={textInput}
                                 onChange={(e) => setTextInput(e.target.value)}
