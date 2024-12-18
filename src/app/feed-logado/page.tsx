@@ -1,14 +1,38 @@
+"use client";
 import Header from "../components/Header";
 import IconeProfessor from "../components/IconeProfessor";
 import Image from "next/image";
 import Lupa from "../../../public/imagens/lupa.svg";
 import Ordenar from "../../../public/imagens/ordenar.svg";
-import Rick from "../../../public/imagens/rick.svg";
 import Publicacao from "../../../public/imagens/publicacaonova.svg";
 
 import { Button } from "@headlessui/react";
+import { useEffect } from "react";
+import api from "@/utils/api";
+import { useState } from "react";
+import { Professores } from "../feed-deslogado/page";
+import ListaProfessoresRecentes from "../components/ListaProfessoresRecentes";
 
-const perfilDeslogado = () => {
+const feedLogado = () => {
+    const[professores,setProfessores] = useState<Professores[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function getProfessores() {
+            try{
+                const response = await api.get("/professores");
+                if(response){
+                    setProfessores(response.data);
+                    setLoading(false);
+                }
+            } catch(err){
+                console.error(err);
+            }
+        }
+        if(loading){
+            getProfessores();
+        }
+    }, [loading]);
   return (
     <>
     <div className="w-screen h-screen">
@@ -27,17 +51,7 @@ const perfilDeslogado = () => {
         </div>
 
         <div className="flex items-center justify-center w-full p-4 rounded-lg bg-white">
-            <div className= "w-[236px] h-[281px] mx-10 mt-5 bg-gray-100 rounded-lg shadow-md flex flex-col items-center justify-start p-4 cursor-pointer transform transition-transform duration-300 hover:scale-105">
-                <Image src={Rick} alt="Imagem do Professor" className="w-[185px] h-[185px] object-cover"/>
-                <h2 className="text-lg font-medium text-gray-800">Rick Sanchez</h2>
-                <h3 className="text-sm text-gray-500">Segurança Computacional</h3>
-            </div>
-
-            <IconeProfessor/>
-
-            <IconeProfessor/>
-
-            <IconeProfessor/>
+          <ListaProfessoresRecentes />
         </div>
 
         <div className="flex justify-center items-center">
@@ -70,17 +84,13 @@ const perfilDeslogado = () => {
         </div>
 
         <div className="flex items-center justify-center w-full p-4 rounded-lg bg-white">
-            <IconeProfessor/>
-
-            <IconeProfessor/>
-
-            <IconeProfessor/>
-
-            <IconeProfessor/>
-        </div>    
+          {professores.map((professor) => (
+            <IconeProfessor key={professor.id} nome={professor.nome} departamento={professor.departamento} />
+          ))}
+        </div>   
     </div>
     </>
   );
 };
 
-export default perfilDeslogado;
+export default feedLogado;
