@@ -83,7 +83,7 @@ const feedLogado = () => {
            
         </div>
 
-        <div className="flex items-center justify-center w-full p-4 rounded-lg bg-white">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white">
           {professores.map((professor) => (
             <IconeProfessor key={professor.id} nome={professor.nome} departamento={professor.departamento} />
           ))}
