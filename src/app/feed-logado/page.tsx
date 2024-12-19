@@ -5,7 +5,7 @@ import Image from "next/image";
 import Lupa from "../../../public/imagens/lupa.svg";
 import Ordenar from "../../../public/imagens/ordenar.svg";
 import Publicacao from "../../../public/imagens/publicacaonova.svg";
-
+import ModalAvaliacao from "../components/ModalAvaliacao/ModalAvaliacao";
 import { Button } from "@headlessui/react";
 import { useEffect } from "react";
 import api from "@/utils/api";
@@ -62,6 +62,16 @@ const FeedLogado = () => {
       });
       setFilteredProfessores(sorted);
     }, [sortCriteria, professores]);
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // Estado do modal
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true); // Abre o modal
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false); // Fecha o modal
+    };
   
     return (
       <>
@@ -100,13 +110,20 @@ const FeedLogado = () => {
               </div>
             </div>
 
-            <button className="bg-green-500 text-white px-12 py-6 rounded-full"
-                onClick={() => {
-                console.log("Botão Nova Publicação clicado");
-                }}>
-                    Nova Publicação
+            <button
+                className="bg-green-500 text-white px-12 py-6 rounded-full"
+                onClick={handleOpenModal}
+            >
+                Nova Publicação
             </button>
-  
+
+            {isModalOpen && (
+                <ModalAvaliacao
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal} // Passa a função de fechar
+            />
+            )}
+
             <div className="relative mr-3">
               <button
                 className="bg-blue-500 text-white px-8 py-6 rounded-full"
