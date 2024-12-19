@@ -77,16 +77,9 @@ export default function PerfilLogadoPage() {
               <Button
                 className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
-                onClick={openModalComentario}
               >
                 Excluir Perfil
               </Button>
-              {isModalComentarioOpen && (
-                <ModalAvaliacao
-                  isOpen={isModalComentarioOpen}
-                  onClose={closeModalComentario}
-                />
-              )}
             </div>
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">
