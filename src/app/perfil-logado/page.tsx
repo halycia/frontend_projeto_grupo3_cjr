@@ -12,15 +12,12 @@ import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
 import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
-import Link from "next/link";
 import { CircleArrowLeft } from "lucide-react";
 import api from "@/utils/api";
-import { useProfessorContext } from "../context/professorContext";
 
 export default function PerfilLogadoPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [avaliacao, setAvaliacao] = useState<any[]>([]);
-  const { professores } = useProfessorContext();
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -78,13 +75,9 @@ export default function PerfilLogadoPage() {
               <Button
                 className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
-                 onClick={openModalComentario}
               >
                 Excluir Perfil
               </Button>
-              {isModalComentarioOpen && (
-                  <ModalAvaliacao isOpen={isModalComentarioOpen} onClose={closeModalComentario} />
-                )}
             </div>
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">
