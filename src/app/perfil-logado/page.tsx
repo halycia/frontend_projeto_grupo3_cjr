@@ -1,35 +1,41 @@
-"use client"
+"use client";
 
-import { Building, Dot, Mail, CircleArrowLeft } from "lucide-react";
-import React, { useState } from 'react';
+import { Building, Dot, Mail } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import Header from "../components/Header";
-import {
-  inter400,
-  inter700,
-  inter800,
-} from "../fonts/fonts";
+import { inter400, inter700, inter800 } from "../fonts/fonts";
 import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
 import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
-import ModalComentario from "../components/ModalComentario/ModalComentario";
-import ModalAvaliacao from "../components/ModalAvaliacao/ModalAvaliacao";
-import ModalEditarAvaliacao from "../components/ModalAvaliacao/ModalEditarAvaliacao";
-
+import Link from "next/link";
+import { CircleArrowLeft } from "lucide-react";
+import api from "@/utils/api";
+import { useProfessorContext } from "../context/professorContext";
 
 export default function PerfilLogadoPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalComentarioOpen, setIsModalComentarioOpen] = useState(false);
-
+  const [avaliacao, setAvaliacao] = useState<any[]>([]);
+  const { professores } = useProfessorContext();
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const openModalComentario = () => setIsModalComentarioOpen(true);
-  const closeModalComentario = () => setIsModalComentarioOpen(false);
+  console.log(avaliacao);
+  useEffect(() => {
+    fetchAvaliacoes();
+  }, []);
+  const fetchAvaliacoes = async () => {
+    try {
+      const response = await api.get("/avaliacoes");
+      setAvaliacao([...response.data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
@@ -63,7 +69,10 @@ export default function PerfilLogadoPage() {
                   Editar Perfil
                 </Button>
                 {isModalOpen && (
-                  <ModalEditarPerfil isOpen={isModalOpen} onClose={closeModal} />
+                  <ModalEditarPerfil
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                  />
                 )}
               </div>
               <Button
@@ -97,10 +106,21 @@ export default function PerfilLogadoPage() {
           </div>
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
-          <div className={`text-black ${inter800.className}`}>Publicações</div>
-          <Publicacao />
-          <Publicacao />
-          <Publicacao />
+          <div className={`text-black ${inter800.className}`}>Publicações</div>`
+          {avaliacao.map((avaliacao) => (
+            <Publicacao
+              key={avaliacao.id}
+              conteudo={avaliacao.conteudo}
+              id={avaliacao.id}
+              createdAt={avaliacao.createdAt}
+              usuarioId={avaliacao.usuarioId}
+              professor={avaliacao.professor.nome}
+              updatedAt={avaliacao.updatedAt}
+              disciplina={avaliacao.diciplina.nome}
+              usuario={avaliacao.usuario.nome}
+            />
+          ))}
+          `
         </div>
         <div className="flex items-center justify-center">
           <Dot />

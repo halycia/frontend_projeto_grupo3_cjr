@@ -1,20 +1,47 @@
-import { Building, CircleArrowLeft, Dot, Mail } from "lucide-react";
+"use client";
+
+import { Building, Dot, Mail } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Button } from "@headlessui/react";
+import Image from "next/image";
+
+import Header from "../components/Header";
 import { inter400, inter700, inter800 } from "../fonts/fonts";
 import "../globals.css";
 import fotoPerfil from "../../../public/imagens/perfil.png";
-import Image from "next/image";
-import { Button } from "@headlessui/react";
 import Publicacao from "../components/Publicacao";
-import HeaderDeslogado from "../components/HeaderDeslogado";
+import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
 import Link from "next/link";
+import { CircleArrowLeft } from "lucide-react";
+import api from "@/utils/api";
+import { useProfessorContext } from "../context/professorContext";
+import HeaderDeslogado from "../components/HeaderDeslogado";
 
-export default function PerfilDesLogadoPage() {
+export default function PerfilLogadoPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [avaliacao, setAvaliacao] = useState<any[]>([]);
+  const { professores } = useProfessorContext();
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  console.log(avaliacao);
+  useEffect(() => {
+    fetchAvaliacoes();
+  }, []);
+  const fetchAvaliacoes = async () => {
+    try {
+      const response = await api.get("/avaliacoes");
+      setAvaliacao([...response.data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
       <HeaderDeslogado />
       <div className="flex items-center w-full h-[30px]">
         <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
-          <Link href={"feed-deslogado"}>
+          <Link href={"feed-logado"}>
             <CircleArrowLeft size={50} />
           </Link>
         </Button>
@@ -32,12 +59,21 @@ export default function PerfilDesLogadoPage() {
             className={`bg-white h-auto border-solid border-b-2 w-full flex flex-col justify-around ${inter700.className}`}
           >
             <div className="flex flex-col items-end mr-4 gap-1 mt-4">
-              <Button
-                className={`bg-lightGreen rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9
+              <div>
+                <Button
+                  className={`bg-lightGreen rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9
                  border-darkBlue hover:shadow-inner hover:shadow-green-400`}
-              >
-                Editar Perfil
-              </Button>
+                  onClick={openModal}
+                >
+                  Editar Perfil
+                </Button>
+                {isModalOpen && (
+                  <ModalEditarPerfil
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                  />
+                )}
+              </div>
               <Button
                 className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
@@ -65,10 +101,21 @@ export default function PerfilDesLogadoPage() {
           </div>
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
-          <div className={`text-black ${inter800.className}`}>Publicações</div>
-          <Publicacao />
-          <Publicacao />
-          <Publicacao />
+          <div className={`text-black ${inter800.className}`}>Publicações</div>`
+          {avaliacao.map((avaliacao) => (
+            <Publicacao
+              key={avaliacao.id}
+              conteudo={avaliacao.conteudo}
+              id={avaliacao.id}
+              createdAt={avaliacao.createdAt}
+              usuarioId={avaliacao.usuarioId}
+              updatedAt={avaliacao.updatedAt}
+              professor={avaliacao.professor.nome}
+              disciplina={avaliacao.disciplina.nome}
+              usuario={avaliacao.usuario.nome}
+            />
+          ))}
+          `
         </div>
         <div className="flex items-center justify-center">
           <Dot />
