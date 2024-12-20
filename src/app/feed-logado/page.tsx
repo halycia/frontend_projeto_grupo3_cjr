@@ -188,6 +188,7 @@ const FeedLogado = () => {
               key={professor.id}
               nome={professor.nome}
               departamento={professor.departamento}
+              id={professor.id}
             />
           ))}
         </div>
