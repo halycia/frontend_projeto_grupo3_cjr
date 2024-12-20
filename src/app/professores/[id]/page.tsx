@@ -1,36 +1,50 @@
 "use client";
 
-import { Building, Dot, Mail } from "lucide-react";
+import { Building, Dot, LibraryBig, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 
-import Header from "../components/Header";
-import { inter400, inter700, inter800 } from "../fonts/fonts";
-import "../globals.css";
-import fotoPerfil from "../../../public/imagens/perfil.png";
-import Publicacao from "../components/Publicacao";
-import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
+import Header from "../../components/Header";
+import { inter400, inter700, inter800 } from "../../fonts/fonts";
+import "../../globals.css";
+import fotoPerfil from "../../../../public/imagens/perfil.png";
+import Publicacao from "../../components/Publicacao";
+import ModalEditarPerfil from "../../components/ModalPerfil/ModalEditarPerfil";
 import { CircleArrowLeft } from "lucide-react";
 import api from "@/utils/api";
-import { useProfessorContext } from "../context/professorContext";
+import { useParams } from "next/navigation";
 
 export default function PerfilLogadoPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [avaliacao, setAvaliacao] = useState<any[]>([]);
-  const { professores } = useProfessorContext();
+  const [professor, setProfessor] = useState<any>();
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const { id } = useParams();
 
+  console.log(professor);
   console.log(avaliacao);
   useEffect(() => {
-    fetchAvaliacoes();
-  }, []);
+    if (id) {
+      fetchAvaliacoes();
+    }
+  }, [id]);
   const fetchAvaliacoes = async () => {
+    if (!id) {
+      console.error("Professor não encontrado");
+      return;
+    }
     try {
-      const response = await api.get("/avaliacoes");
-      setAvaliacao([...response.data]);
+      if (id) {
+        const response = await api.get(`avaliacoes/professor/${Number(id)}`);
+        const professor = await api.get(`professores/${Number(id)}`);
+        console.log(response.data);
+        console.log(professor.data);
+        setAvaliacao(response.data);
+        setProfessor(professor.data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -83,38 +97,50 @@ export default function PerfilLogadoPage() {
             </div>
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">
-                Morty Gamer
+                {professor?.nome}
               </h1>
               <div className="flex items-center gap-1">
                 <Building size={16} />
                 <p className={`text-darkBlue text-sm ${inter400.className}`}>
-                  Ciência da Computação / Dept. Ciência da Computação
+                  Dept. {professor?.departamento}
                 </p>
               </div>
               <div className="flex items-center gap-1">
-                <Mail size={16} />
-                <p className={`${inter400.className} text-sm text-darkBlue`}>
-                  Morty.gamer.23@cjr.org.br
-                </p>
+                <LibraryBig size={16} />
+                <div className={`${inter400.className} text-sm text-darkBlue`}>
+                  {professor?.disciplinas.map(
+                    (disciplina: { id: number; nome: string }) => (
+                      <p key={disciplina.id}>{disciplina.nome}</p>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
           <div className={`text-black ${inter800.className}`}>Publicações</div>`
-          {avaliacao.map((avaliacao) => (
-            <Publicacao
-              key={avaliacao.id}
-              conteudo={avaliacao.conteudo}
-              id={avaliacao.id}
-              createdAt={avaliacao.createdAt}
-              usuarioId={avaliacao.usuarioId}
-              professor={avaliacao.professor.nome}
-              updatedAt={avaliacao.updatedAt}
-              disciplina={avaliacao.diciplina.nome}
-              usuario={avaliacao.usuario.nome}
-            />
-          ))}
+          {avaliacao ? (
+            avaliacao.map((avaliacao) => (
+              <Publicacao
+                key={avaliacao.id}
+                conteudo={avaliacao.conteudo}
+                id={avaliacao.id}
+                createdAt={avaliacao.createdAt}
+                usuarioId={avaliacao.usuarioId}
+                professor={
+                  avaliacao.professor.nome || "Professor não identificado"
+                }
+                updatedAt={avaliacao.updatedAt}
+                disciplina={
+                  avaliacao.disciplina.nome || "Disciplina não identificada"
+                }
+                usuario={avaliacao.usuario.nome || "Usuário não identificado"}
+              />
+            ))
+          ) : (
+            <p> Nenhuma avaliação encontrada</p>
+          )}
           `
         </div>
         <div className="flex items-center justify-center">

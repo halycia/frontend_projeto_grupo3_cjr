@@ -16,7 +16,7 @@ export default function LoginPage() {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await api.post(`http://localhost:3000/login`, {
+      const response = await api.post(`/login`, {
         email,
         senha,
       });
