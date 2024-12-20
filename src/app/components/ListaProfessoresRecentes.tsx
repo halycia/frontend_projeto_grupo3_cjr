@@ -4,10 +4,15 @@ import api from "@/utils/api";
 import { Professores } from "../feed-deslogado/page";
 import IconeProfessor from "../components/IconeProfessor";
 
-function obterProfessoresMaisRecentes(professores: Professores[]): Professores[] {
+function obterProfessoresMaisRecentes(
+  professores: Professores[]
+): Professores[] {
   return professores
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 4); 
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .slice(0, 4);
 }
 
 const ListaProfessoresRecentes: React.FC = () => {
@@ -19,7 +24,9 @@ const ListaProfessoresRecentes: React.FC = () => {
       try {
         const response = await api.get("/professores");
         if (response) {
-          const professoresRecentes = obterProfessoresMaisRecentes(response.data);
+          const professoresRecentes = obterProfessoresMaisRecentes(
+            response.data
+          );
           setProfessores(professoresRecentes);
           setLoading(false);
         }
@@ -43,6 +50,7 @@ const ListaProfessoresRecentes: React.FC = () => {
           key={professor.id}
           nome={professor.nome}
           departamento={professor.departamento}
+          id={professor.id}
         />
       ))}
     </div>
@@ -50,4 +58,3 @@ const ListaProfessoresRecentes: React.FC = () => {
 };
 
 export default ListaProfessoresRecentes;
-

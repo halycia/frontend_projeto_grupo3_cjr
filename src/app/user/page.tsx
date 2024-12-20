@@ -8,8 +8,8 @@ import Link from "next/link";
 
 import Header from "../components/Header";
 import { inter400, inter700, inter800 } from "../fonts/fonts";
-import "../globals.css";
-import fotoPerfil from "../../../public/imagens/perfil.png";
+import "../../globals.css";
+import fotoPerfil from "../../../../public/imagens/perfil.png";
 import Publicacao from "../components/Publicacao";
 import ModalEditarPerfil from "../components/ModalPerfil/ModalEditarPerfil";
 import { CircleArrowLeft } from "lucide-react";
@@ -27,7 +27,7 @@ export default function PerfilLogadoPage() {
   }, []);
   const fetchAvaliacoes = async () => {
     try {
-      const response = await api.get("/avaliacoes");
+      const response = await api.get("/user/:id");
       setAvaliacao([...response.data]);
     } catch (err) {
       console.log(err);
