@@ -1,36 +1,60 @@
+// pages/perfil/[id].tsx
 "use client";
 
-import { Building, Dot, Mail } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import Header from "../../components/Header";
 import { inter400, inter700, inter800 } from "../../fonts/fonts";
-import "../../globals.css";
+import "../../../globals.css";
 import fotoPerfil from "../../../../public/imagens/perfil.png";
 import Publicacao from "../../components/Publicacao";
 import ModalEditarPerfil from "../../components/ModalPerfil/ModalEditarPerfil";
-import { CircleArrowLeft } from "lucide-react";
+import { CircleArrowLeft, Building, Mail, Dot } from "lucide-react";
 import api from "@/utils/api";
 
-export default function PerfilLogadoPage() {
+export default function PerfilPage() {
+  const router = useRouter();
+  const { id } = router.query; // Obtém o ID dinâmico da rota
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [avaliacao, setAvaliacao] = useState<any[]>([]);
+  const [userInfo, setUserInfo] = useState({
+    nome: "",
+    email: "",
+    curso: "",
+    departamento: "",
+  });
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  console.log(avaliacao);
   useEffect(() => {
-    fetchAvaliacoes();
-  }, []);
-  const fetchAvaliacoes = async () => {
+    if (id) {
+      fetchUserInfo(id as string);
+      fetchAvaliacoes(id as string);
+    }
+  }, [id]);
+
+  const fetchUserInfo = async (userId: string) => {
     try {
-      const response = await api.get("/avaliacoes/user/:id");
+      const response = await api.get(`/user/${userId}`);
+      const { nome, email, curso, departamento } = response.data;
+      setUserInfo({ nome, email, curso, departamento });
+    } catch (err) {
+      console.error("Erro ao buscar informações do usuário:", err);
+    }
+  };
+
+  const fetchAvaliacoes = async (userId: string) => {
+    try {
+      const response = await api.get(`/user/${userId}/avaliacoes`);
       setAvaliacao([...response.data]);
     } catch (err) {
-      console.log(err);
+      console.error("Erro ao buscar avaliações:", err);
     }
   };
 
@@ -39,7 +63,7 @@ export default function PerfilLogadoPage() {
       <Header />
       <div className="flex items-center w-full h-[30px]">
         <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
-          <Link href={"feed-logado"}>
+          <Link href="/feed-logado">
             <CircleArrowLeft size={50} />
           </Link>
         </Button>
@@ -81,25 +105,25 @@ export default function PerfilLogadoPage() {
             </div>
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">
-                Morty Gamer
+                {userInfo.nome}
               </h1>
               <div className="flex items-center gap-1">
                 <Building size={16} />
                 <p className={`text-darkBlue text-sm ${inter400.className}`}>
-                  Ciência da Computação / Dept. Ciência da Computação
+                  {userInfo.curso} / {userInfo.departamento}
                 </p>
               </div>
               <div className="flex items-center gap-1">
                 <Mail size={16} />
                 <p className={`${inter400.className} text-sm text-darkBlue`}>
-                  Morty.gamer.23@cjr.org.br
+                  {userInfo.email}
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
-          <div className={`text-black ${inter800.className}`}>Publicações</div>`
+          <div className={`text-black ${inter800.className}`}>Publicações</div>
           {avaliacao.map((avaliacao) => (
             <Publicacao
               key={avaliacao.id}
@@ -113,7 +137,6 @@ export default function PerfilLogadoPage() {
               usuario={avaliacao.usuario.nome}
             />
           ))}
-          `
         </div>
         <div className="flex items-center justify-center">
           <Dot />
