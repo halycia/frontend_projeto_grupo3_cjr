@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, Button } from "@headlessui/react";
 import Image from "next/image";
-
 import { inter400 } from "../../fonts/fonts";
 import fotoPerfil from "../../../../public/imagens/perfil.png";
 
 interface ModalEditarPerfilProps {
   isOpen: boolean;
   onClose: () => void;
-  usuarioId: string; // ID do usuário ou professor
-  tipoPerfil: "user" | "professor"; // Define se é usuário ou professor
+  usuarioId: string;
 }
 
 interface UsuarioPerfilProps {
@@ -24,83 +22,37 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({
   isOpen,
   onClose,
   usuarioId,
-  tipoPerfil,
 }) => {
   const [usuario, setUsuario] = useState<UsuarioPerfilProps | null>(null);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarNovaSenha, setConfirmarNovaSenha] = useState("");
-  const [erroSenhaAtual, setErroSenhaAtual] = useState("");
-  const [erroNovaSenha, setErroNovaSenha] = useState("");
 
   useEffect(() => {
     const fetchUsuarioData = async () => {
       try {
-        const endpoint =
-          tipoPerfil === "user"
-            ? `http://localhost:3000/user/${usuarioId}`
-            : `http://localhost:3000/professor/${usuarioId}`;
-        const response = await fetch(endpoint);
-
+        const response = await fetch(`http://localhost:3000/user/${usuarioId}`);
         if (!response.ok) {
           throw new Error("Falha na requisição da API");
         }
-
         const data = await response.json();
-        if (data) {
-          setUsuario(data);
-        } else {
-          throw new Error("Dados inválidos recebidos");
-        }
+        setUsuario(data);
       } catch (error) {
         console.error("Erro ao carregar dados do perfil", error);
       }
     };
 
     if (usuarioId) fetchUsuarioData();
-  }, [usuarioId, tipoPerfil]);
-
-  const validarSenhaAtual = () => {
-    if (!usuario) return;
-    if (senhaAtual !== usuario?.senha) {
-      setErroSenhaAtual("A senha atual está incorreta");
-    } else {
-      setErroSenhaAtual("");
-    }
-  };
-
-  const validarNovaSenha = () => {
-    if (novaSenha !== confirmarNovaSenha) {
-      setErroNovaSenha("As senhas não coincidem");
-    } else {
-      setErroNovaSenha("");
-    }
-  };
+  }, [usuarioId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!usuario) return;
 
-    let erroAtual = "";
-    let erroNova = "";
-
-    if (senhaAtual !== usuario.senha) {
-      erroAtual = "A senha atual está incorreta";
-    }
-
-    if (novaSenha && novaSenha !== confirmarNovaSenha) {
-      erroNova = "As senhas não coincidem";
-    }
-
-    if (erroAtual || erroNova) {
-      setErroSenhaAtual(erroAtual);
-      setErroNovaSenha(erroNova);
-      return;
-    }
-
     const form = e.currentTarget as HTMLFormElement;
     const nome = (form.elements.namedItem("nome") as HTMLInputElement)?.value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
     const curso = (form.elements.namedItem("curso") as HTMLInputElement)?.value;
     const departamento = (
       form.elements.namedItem("departamento") as HTMLInputElement
@@ -109,17 +61,14 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({
     const updatedUser = {
       ...usuario,
       nome,
+      email,
       curso,
       departamento,
       senha: novaSenha || usuario.senha,
     };
 
     try {
-      const endpoint =
-        tipoPerfil === "user"
-          ? `http://localhost:3000/user/${usuarioId}`
-          : `http://localhost:3000/professor/${usuarioId}`;
-      const response = await fetch(endpoint, {
+      const response = await fetch(`http://localhost:3000/user/${usuarioId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -172,28 +121,70 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({
                 className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
               />
             </div>
-            {tipoPerfil === "user" && (
-              <div className="mt-4">
-                <input
-                  type="text"
-                  name="curso"
-                  placeholder="Curso"
-                  defaultValue={usuario.curso}
-                  className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
-                />
-              </div>
-            )}
-            {tipoPerfil === "professor" && (
-              <div className="mt-4">
-                <input
-                  type="text"
-                  name="departamento"
-                  placeholder="Departamento"
-                  defaultValue={usuario.departamento}
-                  className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
-                />
-              </div>
-            )}
+
+            <div className="mt-4">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                defaultValue={usuario.email}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="text"
+                name="curso"
+                placeholder="Curso"
+                defaultValue={usuario.curso}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="text"
+                name="departamento"
+                placeholder="Departamento"
+                defaultValue={usuario.departamento}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="password"
+                name="senhaAtual"
+                placeholder="Senha Atual"
+                value={senhaAtual}
+                onChange={(e) => setSenhaAtual(e.target.value)}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="password"
+                name="novaSenha"
+                placeholder="Nova Senha"
+                value={novaSenha}
+                onChange={(e) => setNovaSenha(e.target.value)}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div className="mt-4">
+              <input
+                type="password"
+                name="confirmarNovaSenha"
+                placeholder="Confirmar Nova Senha"
+                value={confirmarNovaSenha}
+                onChange={(e) => setConfirmarNovaSenha(e.target.value)}
+                className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring"
+              />
+            </div>
+
             <div className="mt-6 flex justify-center gap-2">
               <Button
                 type="button"

@@ -1,7 +1,5 @@
 // pages/perfil/[id].tsx
 "use client";
-
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
@@ -59,7 +57,7 @@ export default function PerfilPage() {
   };
 
   return (
-    <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
+    <div className="bg-background flex flex-col  items-center h-screen w-screen relative">
       {isAuthenticated ? <Header /> : <HeaderDeslogado />}
       <div className="flex items-center w-full h-[30px]">
         <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
@@ -68,7 +66,7 @@ export default function PerfilPage() {
           </Link>
         </Button>
       </div>
-      <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-full w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
+      <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-min w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
         <div className="h-auto w-full">
           <div className="h-[151px] bg-darkGreen shadow shadow-gray-500 flex relative">
             <Image
@@ -95,6 +93,7 @@ export default function PerfilPage() {
                       <ModalEditarPerfil
                         isOpen={isModalOpen}
                         onClose={closeModal}
+                        usuarioId={userId ?? ""}
                       />
                     )}
                   </div>
@@ -128,19 +127,25 @@ export default function PerfilPage() {
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
           <div className={`text-black ${inter800.className}`}>Publicações</div>
-          {avaliacao.map((avaliacao) => (
-            <Publicacao
-              key={avaliacao.id}
-              conteudo={avaliacao.conteudo}
-              id={avaliacao.id}
-              createdAt={avaliacao.createdAt}
-              usuarioId={avaliacao.usuarioId}
-              professor={avaliacao?.professor?.nome}
-              updatedAt={avaliacao.updatedAt}
-              disciplina={avaliacao?.diciplina?.nome}
-              usuario={avaliacao?.usuario?.nome}
-            />
-          ))}
+          {avaliacao.length > 0 ? (
+            avaliacao.map((avaliacao: any) => (
+              <Publicacao
+                key={avaliacao.id}
+                conteudo={avaliacao.conteudo}
+                id={avaliacao.id}
+                createdAt={avaliacao.createdAt}
+                usuarioId={avaliacao.usuarioId}
+                professor={avaliacao?.professor?.nome}
+                updatedAt={avaliacao.updatedAt}
+                disciplina={avaliacao?.disciplina?.nome}
+                usuario={avaliacao?.usuario?.nome}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">
+              Ainda não há nenhuma avaliação.
+            </p>
+          )}
         </div>
         <div className="flex items-center justify-center">
           <Dot />

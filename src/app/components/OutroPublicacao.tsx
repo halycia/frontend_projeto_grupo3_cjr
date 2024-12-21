@@ -4,6 +4,8 @@ import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Comentarios from "./Comentarios";
+import ModalComentario from "./ModalComentario/ModalComentario";
+import { useAuth } from "../context/authContext";
 import dayjs from "dayjs";
 import api from "@/utils/api";
 import axios from "axios";
@@ -20,7 +22,7 @@ interface PublicacaoProps {
   usuario: string;
 }
 
-export default function Publicacao({
+export default function OutroPublicacao({
   conteudo,
   createdAt,
   professor,
@@ -31,9 +33,14 @@ export default function Publicacao({
 }: PublicacaoProps) {
   const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
   const [comentarios, setComentarios] = useState<any[]>([]);
+  const [disable, setDisable] = useState(false);
+  const [isComentarioModalOpen, setIsComentarioModalOpen] = useState(false);
+
+  const {userId} = useAuth();
 
   useEffect(() => {
     fetchComentarios();
+
   }, []);
 
   const fetchComentarios = async () => {
@@ -91,10 +98,24 @@ export default function Publicacao({
               {comentarios.length} comentários
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <FilePenLine size={20} />
-            <Trash2 size={20} />
-          </div>
+          
+          {userId && (
+            <button
+              onClick={() => setIsComentarioModalOpen(true)}
+              className="w-12 h-12 flex items-center justify-center bg-black text-white rounded-full shadow-lg hover:bg-gray-800"
+            >
+              +
+            </button>
+          )}
+         {isComentarioModalOpen && (
+            <ModalComentario
+            isOpen={isComentarioModalOpen}
+            onClose={() => setIsComentarioModalOpen(false)}
+            usuarioId={Number(userId)}
+            avaliacaoId={id}
+            textInput=""
+            />
+         )}
         </div>
 
         {comentariosVisiveis && (

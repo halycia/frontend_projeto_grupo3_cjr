@@ -2,6 +2,7 @@
 
 import { Building, Dot, LibraryBig, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +11,7 @@ import Header from "../../components/Header";
 import { inter400, inter700, inter800 } from "../../fonts/fonts";
 import "../../globals.css";
 import professorFoto from "../../../../public/imagens/rick.svg";
-import Publicacao from "../../components/Publicacao";
+import OutroPublicacao from "@/app/components/OutroPublicacao";
 import ModalEditarPerfil from "../../components/ModalPerfil/ModalEditarPerfil";
 import { CircleArrowLeft } from "lucide-react";
 import api from "@/utils/api";
@@ -26,6 +27,15 @@ export default function PerfilLogadoPage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const { id } = useParams();
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    if (isAuthenticated) {
+      router.push("/feed-logado");
+    } else {
+      router.push("/");
+    }
+  };
 
   console.log(professor);
   console.log(avaliacao);
@@ -54,16 +64,17 @@ export default function PerfilLogadoPage() {
   };
 
   return (
-    <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
+    <div className="bg-background flex flex-col  items-center h-screen w-screen relative">
       {isAuthenticated ? <Header /> : <HeaderDeslogado />}
       <div className="flex items-center w-full h-[30px]">
-        <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
-          <Link href={"feed-logado"}>
-            <CircleArrowLeft size={50} />
-          </Link>
+        <Button
+          className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20"
+          onClick={handleBackClick}
+        >
+          <CircleArrowLeft size={50} />
         </Button>
       </div>
-      <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-full w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
+      <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-min w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
         <div className="h-auto w-full">
           <div className="h-[151px] bg-darkGreen shadow shadow-gray-500 flex relative">
             <Image
@@ -99,10 +110,10 @@ export default function PerfilLogadoPage() {
           </div>
         </div>
         <div className="bg-white w-full h-full flex flex-col p-2 gap-4">
-          <div className={`text-black ${inter800.className}`}>Publicações</div>`
-          {avaliacao ? (
+          <div className={`text-black ${inter800.className}`}>Publicações</div>
+          {avaliacao.length > 0 ? (
             avaliacao.map((avaliacao) => (
-              <Publicacao
+              <OutroPublicacao
                 key={avaliacao.id}
                 conteudo={avaliacao.conteudo}
                 id={avaliacao.id}
@@ -119,9 +130,10 @@ export default function PerfilLogadoPage() {
               />
             ))
           ) : (
-            <p> Nenhuma avaliação encontrada</p>
+            <p className="text-gray-500 text-center">
+              Ainda não há nenhuma avaliação.
+            </p>
           )}
-          `
         </div>
         <div className="flex items-center justify-center">
           <Dot />
