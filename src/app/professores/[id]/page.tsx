@@ -2,6 +2,7 @@
 
 import { Building, Dot, LibraryBig, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +27,15 @@ export default function PerfilLogadoPage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const { id } = useParams();
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    if (isAuthenticated) {
+      router.push("/feed-logado"); 
+    } else {
+      router.push("/"); 
+    }
+  };
 
   console.log(professor);
   console.log(avaliacao);
@@ -57,10 +67,8 @@ export default function PerfilLogadoPage() {
     <div className="bg-background flex flex-col justify-center items-center h-full w-screen relative">
       {isAuthenticated ? <Header /> : <HeaderDeslogado />}
       <div className="flex items-center w-full h-[30px]">
-        <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20">
-          <Link href={"feed-logado"}>
-            <CircleArrowLeft size={50} />
-          </Link>
+        <Button className="focus:outline-none rounded-full hover:bg-emerald-300 ml-20" onClick={handleBackClick}>
+          <CircleArrowLeft size={50} />    
         </Button>
       </div>
       <div className="bg-white flex flex-col shadow-md shadow-gray-500 items-center h-full w-[90%] max-w-screen-md sm:w-[80%] lg:w-[646px]">
