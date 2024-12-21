@@ -17,11 +17,13 @@ export interface Professores {
 
 const FeedDeslogado = () => {
   const [professores, setProfessores] = useState<Professores[]>([]);
-  const [filteredProfessores, setFilteredProfessores] = useState<Professores[]>([]);
+  const [filteredProfessores, setFilteredProfessores] = useState<Professores[]>(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [sortCriteria, setSortCriteria] = useState("nome"); 
-  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false); 
+  const [sortCriteria, setSortCriteria] = useState("nome");
+  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
   useEffect(() => {
     async function getProfessores() {
@@ -56,9 +58,13 @@ const FeedDeslogado = () => {
       } else if (sortCriteria === "materia") {
         return a.departamento.localeCompare(b.departamento);
       } else if (sortCriteria === "recentes") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       } else if (sortCriteria === "antigas") {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       }
       return 0;
     });
@@ -159,6 +165,7 @@ const FeedDeslogado = () => {
               key={professor.id}
               nome={professor.nome}
               departamento={professor.departamento}
+              id={professor.id}
             />
           ))}
         </div>
@@ -168,9 +175,3 @@ const FeedDeslogado = () => {
 };
 
 export default FeedDeslogado;
-
-
-
-
-
-

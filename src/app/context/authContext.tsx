@@ -1,24 +1,58 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
-
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  token: string | null;
+  userId: string | null;
+  login: (token: string, userId: string) => void;
   logout: () => void;
-  setToken: (token: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  useEffect(() => {
+    // Recupera o token e userId do localStorage ao inicializar
+    const storedToken = localStorage.getItem("token");
+    const storedUserId = localStorage.getItem("userId");
+    if (storedToken && storedUserId) {
+      setToken(storedToken);
+      setUserId(storedUserId);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  function login(userToken: string, userId: string) {
+    setToken(userToken);
+    setUserId(userId);
+    setIsAuthenticated(true);
+
+    localStorage.setItem("token", userToken);
+    localStorage.setItem("userId", userId);
+  }
+
+  function logout() {
+    setToken(null);
+    setUserId(null);
+    setIsAuthenticated(false);
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+  }
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, setToken(token) {} }}
+      value={{ isAuthenticated, login, logout, token, userId }}
     >
       {children}
     </AuthContext.Provider>

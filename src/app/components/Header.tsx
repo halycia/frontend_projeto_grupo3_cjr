@@ -5,7 +5,25 @@ import sairImagem from "../../../public/imagens/sair.png";
 import { BellAlertIcon } from "@heroicons/react/24/outline";
 import { Button } from "@headlessui/react";
 import Link from "next/link";
+import { useAuth } from "../context/authContext";
+import { useRouter } from "next/navigation";
 export default function Header() {
+  const { logout, userId } = useAuth();
+  const router = useRouter();
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
+
+  function handlePerfil() {
+    if (userId) {
+      router.push(`/user/${userId}`);
+    } else {
+      console.error("Usuário não encontrado");
+    }
+  }
+
   return (
     <nav className="h-[99px] w-screen relative inset-y-0 left-0 bg-lightGreen flex justify-between items-center mb-[40px] z-40 shadow shadow-gray-500 ">
       <div className=" w-[150px] ml-10 flex justify-center items-center gap-4">
@@ -18,25 +36,24 @@ export default function Header() {
 
         <div className="flex justify-around w-[140px] items-center">
           <div className="w-[64px] h-[64px] rounded-full overflow-hidden">
-            <Button>
-              <Link href="/perfil-logado">
+            <Button onClick={handlePerfil} className="focus:outline-none">
               <Image
                 src={perfilFoto}
                 alt="foto-perfil"
                 className="w-full object-cover"
               />
-              </Link>
             </Button>
           </div>
           <div className=" ">
-            <Button className="inline-flex items-center gap-2 rounded-full  py-1.5 px-3 text-sm/6 font-semibold  focus:outline-none  data-[hover]:bg-emerald-300 data-[open]:bg-teal-600 data-[open]: outline-1">
-              <Link href={"login"}>
+            <Button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 rounded-full  py-1.5 px-3 text-sm/6 font-semibold  focus:outline-none  data-[hover]:bg-emerald-300 data-[open]:bg-teal-600 data-[open]: outline-1"
+            >
               <Image
                 src={sairImagem}
                 alt="sairImagem"
                 className="w-[40px] h-[40px]"
               />
-              </Link>
             </Button>
           </div>
         </div>

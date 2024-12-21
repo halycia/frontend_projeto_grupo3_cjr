@@ -7,10 +7,9 @@ import { useRouter } from "next/navigation";
 import api from "@/utils/api";
 
 export default function LoginPage() {
-  const [tokeni, setTokeni] = useState({ token: "" });
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const { setToken } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (event: any) => {
@@ -20,9 +19,10 @@ export default function LoginPage() {
         email,
         senha,
       });
-      console.log(response.data.access_token);
-      setToken(response.data.access_token);
-      localStorage.setItem("token", response.data.access_token);
+
+      const token = response.data.access_token;
+      const userId = response.data.userId;
+      login(token, userId);
       router.push("/feed-logado");
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
