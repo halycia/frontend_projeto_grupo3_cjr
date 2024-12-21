@@ -4,6 +4,7 @@ import fotoPerfil from "../../../public/imagens/perfil.png";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Comentarios from "./Comentarios";
+import ModalEditarAvaliacao from "./ModalAvaliacao/ModalEditarAvaliacao";
 import dayjs from "dayjs";
 import api from "@/utils/api";
 import axios from "axios";
@@ -31,6 +32,8 @@ export default function Publicacao({
 }: PublicacaoProps) {
   const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
   const [comentarios, setComentarios] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchComentarios();
@@ -47,6 +50,37 @@ export default function Publicacao({
       } else {
         console.log(err);
       }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Tem certeza de que deseja excluir esta avaliação?")) return;
+
+    try {
+      setIsDeleting(true);
+      await api.delete(`/avaliacoes/${id}`);
+      alert("Avaliação excluída com sucesso!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao excluir a avaliação:", error);
+      alert("Erro ao excluir a avaliação.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteComentario = async (comentarioId: number) => {
+    if (!confirm("Tem certeza de que deseja excluir este comentário?")) return;
+
+    try {
+      await api.delete(`/comentarios/${comentarioId}`);
+      alert("Comentário excluído com sucesso!");
+      setComentarios((prevComentarios) =>
+        prevComentarios.filter((comentario) => comentario.id !== comentarioId)
+      );
+    } catch (error) {
+      console.error("Erro ao excluir o comentário:", error);
+      alert("Erro ao excluir o comentário.");
     }
   };
 
@@ -92,8 +126,26 @@ export default function Publicacao({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <FilePenLine size={20} />
-            <Trash2 size={20} />
+            {isModalOpen && (
+              <ModalEditarAvaliacao
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                avaliacaoId={id}
+              />
+            )}
+
+            <FilePenLine
+              size={20}
+              className="cursor-pointer hover:text-green-500"
+              onClick={() => setIsModalOpen(true)}
+            />
+            <Trash2
+              size={20}
+              className={`cursor-pointer hover:text-red-500 ${
+                isDeleting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={isDeleting ? undefined : handleDelete}
+            />
           </div>
         </div>
 
@@ -108,9 +160,7 @@ export default function Publicacao({
                   createdAt={comentario.createdAt}
                   usuarioId={comentario.usuarioId}
                   avaliacaoId={comentario.publicacaoId}
-                  onDelete={function (id: number): void {
-                    throw new Error("Function not implemented.");
-                  }}
+                  onDelete={() => handleDeleteComentario(comentario.id)}
                 />
               ))
             ) : (
