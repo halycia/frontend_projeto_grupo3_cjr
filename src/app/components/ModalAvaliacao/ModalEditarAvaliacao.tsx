@@ -82,10 +82,12 @@ const ModalEditarAvaliacao: React.FC<ModalEditarAvaliacaoProps> = ({ isOpen, onC
         };
 
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:3000/avaliacoes/${avaliacaoId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(avaliacaoData),
             });
@@ -97,6 +99,7 @@ const ModalEditarAvaliacao: React.FC<ModalEditarAvaliacaoProps> = ({ isOpen, onC
             const data = await response.json();
             console.log('Avaliação editada com sucesso:', data);
             onClose();
+            window.location.reload();
         } catch (error) {
             console.error('Erro ao editar avaliação:', error);
         }
