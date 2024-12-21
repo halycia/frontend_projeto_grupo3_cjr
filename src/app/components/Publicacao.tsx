@@ -31,7 +31,6 @@ export default function Publicacao({
 }: PublicacaoProps) {
   const [comentariosVisiveis, setComentariosVisiveis] = useState(false);
   const [comentarios, setComentarios] = useState<any[]>([]);
-  const [disable, setDisable] = useState(false);
 
   useEffect(() => {
     fetchComentarios();
