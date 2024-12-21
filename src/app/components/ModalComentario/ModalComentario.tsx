@@ -44,6 +44,8 @@ const ModalComentario: React.FC<ModalComentarioProps> = ({
         console.log("Comentário criado com sucesso:", response.data);
         setMessage("Comentário salvo com sucesso.");
         setTextInput("");
+
+        window.location.reload();
       }
     } catch (error) {
       console.error("Erro ao criar comentário:", error);
@@ -51,6 +53,7 @@ const ModalComentario: React.FC<ModalComentarioProps> = ({
     } finally {
       setIsLoading(false);
       onClose(); 
+      window.location.reload();
     }
   };
 
