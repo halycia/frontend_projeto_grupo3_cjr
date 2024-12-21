@@ -2,14 +2,15 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import api from "@/utils/api";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    nome: "",
     email: "",
-    password: "",
-    course: "",
-    department: "",
+    senha: "",
+    curso: "",
+    departamento: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,27 +36,17 @@ const Signup: React.FC = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (formData.senha.length < 6) {
       setErrorMessage("A senha deve ter pelo menos 6 caracteres.");
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Erro ao criar a conta.");
+      console.log(formData);
+      const response = await api.post("/user", formData);
+      if (!response) {
+        throw new Error("Erro ao criar usuário");
       }
 
       router.push("/login");
@@ -82,10 +73,10 @@ const Signup: React.FC = () => {
           </h1>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
-              id="name"
+              id="nome"
               label="Nome"
               type="text"
-              value={formData.name}
+              value={formData.nome}
               onChange={handleChange}
               required
             />
@@ -98,25 +89,25 @@ const Signup: React.FC = () => {
               required
             />
             <InputField
-              id="password"
+              id="senha"
               label="Senha"
               type="password"
-              value={formData.password}
+              value={formData.senha}
               onChange={handleChange}
               required
             />
             <InputField
-              id="course"
+              id="curso"
               label="Curso"
               type="text"
-              value={formData.course}
+              value={formData.curso}
               onChange={handleChange}
             />
             <InputField
-              id="department"
+              id="departamento"
               label="Departamento"
               type="text"
-              value={formData.department}
+              value={formData.departamento}
               onChange={handleChange}
             />
             <button

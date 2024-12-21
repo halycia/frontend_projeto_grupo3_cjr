@@ -108,6 +108,9 @@ export default function Publicacao({
                   createdAt={comentario.createdAt}
                   usuarioId={comentario.usuarioId}
                   avaliacaoId={comentario.publicacaoId}
+                  onDelete={function (id: number): void {
+                    throw new Error("Function not implemented.");
+                  }}
                 />
               ))
             ) : (
