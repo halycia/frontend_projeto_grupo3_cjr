@@ -11,7 +11,7 @@ import Header from "../../components/Header";
 import { inter400, inter700, inter800 } from "../../fonts/fonts";
 import "../../globals.css";
 import professorFoto from "../../../../public/imagens/rick.svg";
-import Publicacao from "../../components/Publicacao";
+import OutroPublicacao from "@/app/components/OutroPublicacao";
 import ModalEditarPerfil from "../../components/ModalPerfil/ModalEditarPerfil";
 import { CircleArrowLeft } from "lucide-react";
 import api from "@/utils/api";
@@ -113,7 +113,7 @@ export default function PerfilLogadoPage() {
           <div className={`text-black ${inter800.className}`}>Publicações</div>
           {avaliacao.length > 0 ? (
             avaliacao.map((avaliacao) => (
-              <Publicacao
+              <OutroPublicacao
                 key={avaliacao.id}
                 conteudo={avaliacao.conteudo}
                 id={avaliacao.id}
