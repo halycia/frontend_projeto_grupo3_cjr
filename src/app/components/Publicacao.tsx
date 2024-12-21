@@ -69,6 +69,21 @@ export default function Publicacao({
     }
   };
 
+  const handleDeleteComentario = async (comentarioId: number) => {
+    if (!confirm("Tem certeza de que deseja excluir este comentário?")) return;
+  
+    try {
+      await api.delete(`/comentarios/${comentarioId}`);
+      alert("Comentário excluído com sucesso!");
+      setComentarios((prevComentarios) =>
+        prevComentarios.filter((comentario) => comentario.id !== comentarioId)
+      );
+    } catch (error) {
+      console.error("Erro ao excluir o comentário:", error);
+      alert("Erro ao excluir o comentário.");
+    }
+  };
+
   return (
     <div className="bg-darkGreen w-full h-auto max-w-screen-sm rounded-3xl p-4 gap-2 overflow-y-auto">
       <div className="w-full flex flex-col">
@@ -90,7 +105,7 @@ export default function Publicacao({
             </p>
           </div>
         </div>
-        <div className="flex  items-center w-auto h-auto text-ellipsis ml-16">
+        <div className="flex items-center w-auto h-auto text-ellipsis ml-16">
           <p
             className={`${inter500.className} text-darkBlue text-sm text-justify`}
           >
@@ -145,6 +160,7 @@ export default function Publicacao({
                   createdAt={comentario.createdAt}
                   usuarioId={comentario.usuarioId}
                   avaliacaoId={comentario.publicacaoId}
+                  onDelete={() => handleDeleteComentario(comentario.id)}
                 />
               ))
             ) : (

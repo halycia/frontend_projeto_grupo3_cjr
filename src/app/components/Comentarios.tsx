@@ -5,13 +5,16 @@ import fotoPerfil from "../../../public/imagens/perfil.png";
 import dayjs from "dayjs";
 import { FilePenLine, Trash2 } from "lucide-react";
 import ModalEditarComentario from "./ModalComentario/ModalEditarComentario";
+import { useAuth } from "../context/authContext";
+import api from "@/utils/api";
 
 interface ComentariosProps {
   conteudo: string;
   createdAt: string;
+  id: number;
   usuarioId: number;
   avaliacaoId: number;
-  id: number;
+  onDelete: (id: number) => void; // Callback para exclusão
 }
 
 export default function Comentarios({
@@ -20,8 +23,16 @@ export default function Comentarios({
   id,
   usuarioId,
   avaliacaoId,
+
 }: ComentariosProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { userId } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  console.log(conteudo)
+  console.log(createdAt)
+  console.log(id)
+  console.log(usuarioId)
+  console.log(avaliacaoId)
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -30,6 +41,28 @@ export default function Comentarios({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleDeleteComment = async () => {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+
+      const response = await api.delete(`/comentarios/${id}`);
+
+      if (response.status === 204) {
+        alert("Comentário excluído com sucesso!");
+        window.location.reload()
+      }
+    } catch (error) {
+      alert("Erro ao excluir o comentário");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loggedUserId = userId ? parseInt(userId, 10) : null;
 
   return (
     <div className="bg-white flex justify-center flex-col w-full rounded-full p-1">
@@ -51,10 +84,20 @@ export default function Comentarios({
           {conteudo}
         </p>
       </div>
-      <div className="flex ml-auto items-center gap-2 border-r-[30px] border-b-2 border-transparent">
-        <FilePenLine size={20} onClick={openModal} className="cursor-pointer" />
-        <Trash2 size={20} />
-      </div>
+      {loggedUserId === usuarioId && (
+        <div className="flex ml-auto items-center gap-2 border-r-[30px] border-b-2 border-transparent">
+          <FilePenLine
+            size={20}
+            onClick={openModal}
+            className="cursor-pointer"
+          />
+          <Trash2
+            size={20}
+            onClick={handleDeleteComment}
+            className="cursor-pointer"
+          />
+        </div>
+      )}
       <ModalEditarComentario isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
