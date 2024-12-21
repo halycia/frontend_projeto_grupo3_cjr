@@ -3,6 +3,7 @@ import { Dialog, Button } from "@headlessui/react";
 import Image from "next/image";
 import { inter400 } from "../../fonts/fonts";
 import fotoPerfil from "../../../../public/imagens/perfil.png";
+import api from "@/utils/api";
 
 interface ModalEditarPerfilProps {
   isOpen: boolean;
@@ -31,12 +32,11 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({
   useEffect(() => {
     const fetchUsuarioData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/user/${usuarioId}`);
-        if (!response.ok) {
-          throw new Error("Falha na requisição da API");
+        const response = await api.get(`/user/${usuarioId}`);
+        if (!response) {
+          throw new Error("Erro ao carregar dados do perfil");
         }
-        const data = await response.json();
-        setUsuario(data);
+        setUsuario(response.data);
       } catch (error) {
         console.error("Erro ao carregar dados do perfil", error);
       }
@@ -68,20 +68,14 @@ const ModalEditarPerfil: React.FC<ModalEditarPerfilProps> = ({
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/user/${usuarioId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedUser),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao salvar alterações");
+      const response = await api.patch(`/user/${usuarioId}`, updatedUser);
+      if (!response) {
+        throw new Error("Erro ao salvar dados");
       }
 
       console.log("Dados salvos com sucesso");
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Erro ao salvar dados", error);
     }
