@@ -1,5 +1,7 @@
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Importação do hook useRouter
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ const Signup: React.FC = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const router = useRouter(); // Instância do roteador
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -39,9 +43,8 @@ const Signup: React.FC = () => {
         throw new Error("Erro ao criar a conta. Verifique os dados.");
       }
 
-      const data = await response.json();
-      setSuccessMessage("Conta criada com sucesso!");
-      setFormData({ name: "", email: "", password: "", course: "", department: "" });
+      // Redireciona para a página de login após o sucesso
+      router.push("/login");
     } catch (error) {
       setErrorMessage((error as Error).message);
     }
@@ -152,12 +155,9 @@ const Signup: React.FC = () => {
             </button>
           </form>
 
-          {/* Mensagens de erro/sucesso */}
+          {/* Mensagens de erro */}
           {errorMessage && (
             <p className="mt-4 text-red-500 text-center">{errorMessage}</p>
-          )}
-          {successMessage && (
-            <p className="mt-4 text-green-500 text-center">{successMessage}</p>
           )}
 
           {/* Link para a página de login */}
