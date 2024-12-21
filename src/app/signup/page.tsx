@@ -1,7 +1,52 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
 
 const Signup: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    course: "",
+    department: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao criar a conta. Verifique os dados.");
+      }
+
+      const data = await response.json();
+      setSuccessMessage("Conta criada com sucesso!");
+      setFormData({ name: "", email: "", password: "", course: "", department: "" });
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Imagem à esquerda */}
@@ -20,7 +65,7 @@ const Signup: React.FC = () => {
             Cadastro Usuário
           </h1>
           {/* Formulário */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="name"
@@ -31,6 +76,9 @@ const Signup: React.FC = () => {
               <input
                 type="text"
                 id="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
@@ -44,6 +92,9 @@ const Signup: React.FC = () => {
               <input
                 type="email"
                 id="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
@@ -57,6 +108,9 @@ const Signup: React.FC = () => {
               <input
                 type="password"
                 id="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
@@ -70,6 +124,8 @@ const Signup: React.FC = () => {
               <input
                 type="text"
                 id="course"
+                value={formData.course}
+                onChange={handleChange}
                 className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
@@ -83,6 +139,8 @@ const Signup: React.FC = () => {
               <input
                 type="text"
                 id="department"
+                value={formData.department}
+                onChange={handleChange}
                 className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
@@ -93,6 +151,14 @@ const Signup: React.FC = () => {
               Criar Conta
             </button>
           </form>
+
+          {/* Mensagens de erro/sucesso */}
+          {errorMessage && (
+            <p className="mt-4 text-red-500 text-center">{errorMessage}</p>
+          )}
+          {successMessage && (
+            <p className="mt-4 text-green-500 text-center">{successMessage}</p>
+          )}
 
           {/* Link para a página de login */}
           <div className="mt-6 text-center text-gray-700">
