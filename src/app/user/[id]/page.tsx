@@ -95,6 +95,7 @@ export default function PerfilPage() {
                       <ModalEditarPerfil
                         isOpen={isModalOpen}
                         onClose={closeModal}
+                        usuarioId={userId}
                       />
                     )}
                   </div>
