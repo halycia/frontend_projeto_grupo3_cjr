@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, Combobox, Textarea } from '@headlessui/react';
+import { useAuth } from "@/app/context/authContext";
 
 interface ModalAvaliacaoProps {
     isOpen: boolean;
@@ -14,6 +15,7 @@ const ModalAvaliacao: React.FC<ModalAvaliacaoProps> = ({ isOpen, onClose }) => {
     const [searchDisciplina, setSearchDisciplina] = useState<string>('');
     const [professores, setProfessores] = useState<{ id: number; nome: string }[]>([]);
     const [disciplinas, setDisciplinas] = useState<{ id: number; nome: string }[]>([]);
+    const { userId, isAuthenticated } = useAuth();
 
     useEffect(() => {
         const fetchProfessores = async () => {
@@ -53,23 +55,29 @@ const ModalAvaliacao: React.FC<ModalAvaliacaoProps> = ({ isOpen, onClose }) => {
         e.preventDefault();
 
         const avaliacaoData = {
-            usuarioId: 3,
+            usuarioId: userId,
             professorId: selectedProfessor ? professores.find(p => p.nome === selectedProfessor)?.id : null,
             disciplinaId: selectedDisciplina ? disciplinas.find(d => d.nome === selectedDisciplina)?.id : null,
-            conteudo: textInput,
+            conteudo: textInput.trim(),
         };
 
         try {
+            const token = localStorage.getItem('token');
+
             const response = await fetch('http://localhost:3000/avaliacoes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(avaliacaoData),
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao criar avaliação');
+                const errorDetail = await response.json();
+                console.error('Erro na validação do backend:', errorDetail);
+                alert(`Erro: ${errorDetail.message || 'Falha ao validar os dados'}`);
+                return;
             }
 
             const data = await response.json();
