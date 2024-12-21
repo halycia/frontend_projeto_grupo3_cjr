@@ -41,19 +41,22 @@ const ModalComentario: React.FC<ModalComentarioProps> = ({
       const response = await api.post("/comentarios", comentarioData);
 
       if (response.status === 200) {
-        console.log("Comentário criado com sucesso:", response.data);
-        setMessage("Comentário salvo com sucesso.");
+        setMessage("Comentário salvo com sucesso!");
         setTextInput("");
 
-        window.location.reload();
+        // Recarregar página após breve atraso
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       }
     } catch (error) {
       console.error("Erro ao criar comentário:", error);
-      setMessage("Erro ao criar comentário.");
+      setMessage("Erro ao criar comentário. Por favor, tente novamente.");
     } finally {
       setIsLoading(false);
-      onClose(); 
-      window.location.reload();
+      if (!message?.includes("sucesso")) {
+        onClose(); // Fecha o modal apenas se não for um erro crítico
+      }
     }
   };
 
@@ -74,7 +77,9 @@ const ModalComentario: React.FC<ModalComentarioProps> = ({
             </div>
 
             {message && (
-              <div className="text-center text-white mt-4">{message}</div>
+              <div className="text-center text-white mt-4">
+                {message}
+              </div>
             )}
 
             <div className="mt-4 flex justify-end gap-2">
@@ -101,4 +106,3 @@ const ModalComentario: React.FC<ModalComentarioProps> = ({
 };
 
 export default ModalComentario;
-

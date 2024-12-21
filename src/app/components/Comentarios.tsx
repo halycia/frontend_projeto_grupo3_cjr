@@ -28,11 +28,6 @@ export default function Comentarios({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userId } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  console.log(conteudo)
-  console.log(createdAt)
-  console.log(id)
-  console.log(usuarioId)
-  console.log(avaliacaoId)
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -98,7 +93,7 @@ export default function Comentarios({
           />
         </div>
       )}
-      <ModalEditarComentario isOpen={isModalOpen} onClose={closeModal} />
+      <ModalEditarComentario isOpen={isModalOpen} onClose={closeModal} comentarioId={id}/>
     </div>
   );
 }
