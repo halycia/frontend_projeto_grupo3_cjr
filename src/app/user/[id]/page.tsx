@@ -1,5 +1,3 @@
-// pages/perfil/[id].tsx
-"use client";
 import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
@@ -17,6 +15,7 @@ import HeaderDeslogado from "@/app/components/HeaderDeslogado";
 
 export default function PerfilPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [avaliacao, setAvaliacao] = useState<any[]>([]);
   const { userId, isAuthenticated } = useAuth();
   const [userInfo, setUserInfo] = useState({
@@ -28,6 +27,21 @@ export default function PerfilPage() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleDeleteConfirmation = () => setShowDeleteConfirmation(true);
+  const closeDeleteConfirmation = () => setShowDeleteConfirmation(false);
+
+  const handleDeleteProfile = async () => {
+    try {
+      await api.delete(`/user/${userId}`);
+      alert("Perfil excluído com sucesso!");
+      // Redirecionar para outra página após a exclusão, se necessário
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("Erro ao excluir perfil:", err);
+      alert("Erro ao excluir o perfil. Tente novamente.");
+    }
+  };
 
   useEffect(() => {
     if (userId) {
@@ -100,12 +114,34 @@ export default function PerfilPage() {
                   <Button
                     className={`bg-red rounded-full ${inter400.className} text-darkBlue border-2 w-36 h-9 
                  border-darkBlue hover:shadow-inner hover:shadow-rose-400`}
+                    onClick={handleDeleteConfirmation}
                   >
                     Excluir Perfil
                   </Button>
                 </>
               )}
             </div>
+            {showDeleteConfirmation && (
+              <div className="bg-gray-100 p-4 rounded-md shadow-md w-full mt-4 flex flex-col items-center">
+                <p className="text-red-600 font-bold mb-4">
+                  Tem certeza de que deseja excluir seu perfil?
+                </p>
+                <div className="flex gap-4">
+                  <Button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                    onClick={handleDeleteProfile}
+                  >
+                    Sim
+                  </Button>
+                  <Button
+                    className="bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400"
+                    onClick={closeDeleteConfirmation}
+                  >
+                    Não
+                  </Button>
+                </div>
+              </div>
+            )}
             <div className="flex flex-col ml-12 gap-2 sm:ml-2">
               <h1 className="text-darkBlue text-xl sm:text-lg lg:text-2xl">
                 {userInfo.nome}

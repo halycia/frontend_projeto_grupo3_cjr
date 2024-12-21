@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Importação do hook useRouter
+import { useRouter } from "next/navigation";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,9 +13,8 @@ const Signup: React.FC = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-
-  const router = useRouter(); // Instância do roteador
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -28,31 +27,47 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
-    setSuccessMessage("");
+    setIsLoading(true);
+
+    if (!formData.email.match(/^\S+@\S+\.\S+$/)) {
+      setErrorMessage("Por favor, insira um e-mail válido.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setErrorMessage("A senha deve ter pelo menos 6 caracteres.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:3000/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Erro ao criar a conta. Verifique os dados.");
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao criar a conta.");
       }
 
-      // Redireciona para a página de login após o sucesso
       router.push("/login");
     } catch (error) {
       setErrorMessage((error as Error).message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Imagem à esquerda */}
       <div
         className="w-1/2 bg-cover bg-center"
         style={{
@@ -60,107 +75,61 @@ const Signup: React.FC = () => {
             "url('https://noticias.unb.br/images/Noticias/Fotos_frequentes/ICC/09mai2022_ICC_23_LGPrado.jpg')",
         }}
       ></div>
-
-      {/* Formulário à direita */}
       <div className="w-1/2 bg-gray-100 flex items-center justify-center">
         <div className="w-3/4 max-w-md">
           <h1 className="text-2xl font-semibold text-center mb-6 text-gray-700">
             Cadastro Usuário
           </h1>
-          {/* Formulário */}
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Nome
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Senha
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="course"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Curso
-              </label>
-              <input
-                type="text"
-                id="course"
-                value={formData.course}
-                onChange={handleChange}
-                className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="department"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Departamento
-              </label>
-              <input
-                type="text"
-                id="department"
-                value={formData.department}
-                onChange={handleChange}
-                className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg focus:outline-none"
-              />
-            </div>
+            <InputField
+              id="name"
+              label="Nome"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              id="email"
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              id="password"
+              label="Senha"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              id="course"
+              label="Curso"
+              type="text"
+              value={formData.course}
+              onChange={handleChange}
+            />
+            <InputField
+              id="department"
+              label="Departamento"
+              type="text"
+              value={formData.department}
+              onChange={handleChange}
+            />
             <button
               type="submit"
               className="w-full px-4 py-2 mt-4 text-white bg-green-500 rounded-lg hover:bg-green-600"
+              disabled={isLoading}
             >
-              Criar Conta
+              {isLoading ? "Carregando..." : "Criar Conta"}
             </button>
           </form>
-
-          {/* Mensagens de erro */}
           {errorMessage && (
             <p className="mt-4 text-red-500 text-center">{errorMessage}</p>
           )}
-
-          {/* Link para a página de login */}
           <div className="mt-6 text-center text-gray-700">
             <p>
               Já tem uma conta?{" "}
@@ -174,5 +143,32 @@ const Signup: React.FC = () => {
     </div>
   );
 };
+
+const InputField: React.FC<{
+  id: string;
+  label: string;
+  type: string;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  required?: boolean;
+}> = ({ id, label, type, value, onChange, required }) => (
+  <div>
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700"
+      aria-label={label}
+    >
+      {label}
+    </label>
+    <input
+      type={type}
+      id={id}
+      value={value}
+      onChange={onChange}
+      required={required}
+      className="w-full px-4 py-2 mt-1 text-black bg-gray-100 border border-gray-300 rounded-lg"
+    />
+  </div>
+);
 
 export default Signup;
