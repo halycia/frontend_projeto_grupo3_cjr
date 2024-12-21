@@ -71,7 +71,7 @@ export default function Publicacao({
             </p>
           </div>
         </div>
-        <div className="flex  items-center w-auto h-auto text-ellipsis ml-16">
+        <div className="flex items-center w-auto h-auto text-ellipsis ml-16">
           <p
             className={`${inter500.className} text-darkBlue text-sm text-justify`}
           >
